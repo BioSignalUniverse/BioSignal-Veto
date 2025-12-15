@@ -9,6 +9,12 @@ class DecisionGate:
                 cfg = json.load(f)
             self.thresholds = cfg.get("thresholds", {})
             self.weights = cfg.get("weights", {})
+            self.receptivity_levels = cfg.get("receptivity_levels", {"low": 0.4, "medium": 0.7, "high": 1.0})
+            self.recommended_delivery = cfg.get("recommended_delivery", {
+                "low": "field_preparation",
+                "medium": "structured_guidance",
+                "high": "deep_exploration"
+            })
         else:
             # Defaults
             self.thresholds = {
@@ -18,6 +24,12 @@ class DecisionGate:
             self.weights = {
                 "hrv_log": 0.30, "normalized_hrv": 0.25, "lf_hf_proxy": 0.20,
                 "variability_index": 0.10, "resp_sync": 0.10, "hr_stability": 0.05
+            }
+            self.receptivity_levels = {"low": 0.4, "medium": 0.7, "high": 1.0}
+            self.recommended_delivery = {
+                "low": "field_preparation",
+                "medium": "structured_guidance",
+                "high": "deep_exploration"
             }
         self.total_weight = sum(self.weights.values())
         self.decision_threshold = 0.7
@@ -44,11 +56,26 @@ class DecisionGate:
         
         proceed = normalized_score >= self.decision_threshold
         
+        # Receptivity state for machine consumption
+        if normalized_score < self.receptivity_levels["low"]:
+            receptivity_level = "LOW"
+        elif normalized_score < self.receptivity_levels["medium"]:
+            receptivity_level = "MEDIUM"
+        else:
+            receptivity_level = "HIGH"
+        
+        recommended = self.recommended_delivery.get(receptivity_level.lower(), "structured_guidance")
+        
         return {
             "decision": "PROCEED" if proceed else "WAIT",
             "score": round(normalized_score, 3),
             "veto_eligible": veto_eligible,
             "veto_status": "ARMED" if veto_eligible else "STANDBY",
             "details": details,
-            "features": features
-              }
+            "features": features,
+            "receptivity_state": {
+                "level": receptivity_level,
+                "score": round(normalized_score, 3),
+                "recommended_delivery": recommended
+            }
+        }
