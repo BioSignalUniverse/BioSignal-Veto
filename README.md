@@ -21,6 +21,15 @@ No narrative.
 
 Only the body decides when the machine may act.
 
+**New: Machine-readable receptivity state**  
+Outputs normalized receptivity level (LOW / MEDIUM / HIGH) and recommended delivery mode  
+for adaptive AI systems:  
+- LOW → field_preparation  
+- MEDIUM → structured_guidance  
+- HIGH → deep_exploration  
+
+Enables ethical information transfer by respecting measured human bandwidth.
+
 ## Why
 
 A direct counter-signal to rigid, disembodied paradigms of intelligence.  
