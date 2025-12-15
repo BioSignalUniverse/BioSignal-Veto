@@ -28,13 +28,23 @@ class BioSignalVeto:
         
         if raw["signal_quality"] < 0.7:
             print("Signal quality low — cycle discarded")
-            return
+            return None
         
         features = self.processor.calculate_features(raw)
         decision = self.gate.evaluate(features, raw)
         
         print(f"Score: {decision['score']:.3f} → {decision['decision']}")
         print(f"Veto: {decision['veto_status']}")
+        
+        # Receptivity state output for machine consumption
+        receptivity = decision.get("receptivity_state", {"level": "UNKNOWN"})
+        level = receptivity["level"]
+        if level == "LOW":
+            print("Field preparation suggested. Machine response limited.")
+        elif level == "MEDIUM":
+            print("Structured delivery optimal.")
+        else:
+            print("Full bandwidth available. Deep co-exploration possible.")
         
         # Veto arm logic
         if decision["veto_eligible"]:
@@ -54,13 +64,16 @@ class BioSignalVeto:
             "raw": raw,
             "features": features,
             "decision": decision,
-            "veto_armed": self.veto_armed
+            "veto_armed": self.veto_armed,
+            "receptivity_state": receptivity  # Machine-readable output
         }
         
         await self.executor.execute("write_data", {"record": record})
         
         if decision["decision"] == "WAIT":
             await self.executor.execute("wait", {"duration": 3})
+        
+        return record
     
     async def shutdown(self):
         await self.sensor.cleanup()
@@ -74,8 +87,8 @@ async def main():
     interval = 4
     
     for i in range(1, cycles + 1):
-        await veto.run_cycle(i)
-        if i < cycles:
+        record = await veto.run_cycle(i)
+        if record and i < cycles:
             await asyncio.sleep(interval)
     
     await veto.shutdown()
