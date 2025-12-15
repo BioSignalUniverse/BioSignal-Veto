@@ -1,0 +1,19 @@
+{
+  "thresholds": {
+    "hrv_log": 3.8,
+    "normalized_hrv": 0.55,
+    "lf_hf_proxy": 1.5,
+    "variability_index": 0.5,
+    "resp_sync": 0.6,
+    "hr_stability": 0.8
+  },
+  "weights": {
+    "hrv_log": 0.30,
+    "normalized_hrv": 0.25,
+    "lf_hf_proxy": 0.20,
+    "variability_index": 0.10,
+    "resp_sync": 0.10,
+    "hr_stability": 0.05
+  },
+  "decision_threshold": 0.7
+}
