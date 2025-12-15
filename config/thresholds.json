@@ -15,5 +15,15 @@
     "resp_sync": 0.10,
     "hr_stability": 0.05
   },
-  "decision_threshold": 0.7
+  "decision_threshold": 0.7,
+  "receptivity_levels": {
+    "low": 0.4,
+    "medium": 0.7,
+    "high": 1.0
+  },
+  "recommended_delivery": {
+    "low": "field_preparation",
+    "medium": "structured_guidance",
+    "high": "deep_exploration"
+  }
 }
