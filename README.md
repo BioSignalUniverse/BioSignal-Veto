@@ -1,41 +1,18 @@
 # BioSignal-Veto
 
-**Biosignal Veto Gate**  
-Sovereignty returned to the body.
+## The Architecture of Sovereignty
+This repository is organized into a dual-gate system to return data dignity to the body.
 
-A minimal, objective biometric enforcement system.
+### 1. The Core (Sovereign Engine)
+Located in `/core`, this contains the high-fidelity processing logic for the **Polar H10**. 
+- **Truth Source:** Raw ECG-derived RMSSD.
+- **Status:** Primary/Absolute.
 
-Real-time heart rate variability (HRV RMSSD calculated from RR intervals) via Polar H10 when detected.  
-Graceful correlated physiological simulation when no sensor available.
+### 2. The Universal Bridge (Mainstream Gate)
+The `universal_gate.py` at the root acts as the listener for the **Apple Watch**.
+- **Data Type:** Optical PPG "Reflection".
+- **Humility Filter:** A 0.85x calibration is automatically applied to all incoming Apple Watch data to account for optical noise and algorithmic processing.
 
-Raw signals → mathematical features → weighted empirical thresholds.
-
-Weighted score ≥ 70% → PROCEED  
-Otherwise → VETO WAIT enforced.
-
-Sustained real-signal parasympathetic dominance required to arm full veto authority.
-
-No philosophy.  
-No interpretation.  
-No narrative.
-
-Only the body decides when the machine may act.
-
-**New: Machine-readable receptivity state**  
-Outputs normalized receptivity level (LOW / MEDIUM / HIGH) and recommended delivery mode  
-for adaptive AI systems:  
-- LOW → field_preparation  
-- MEDIUM → structured_guidance  
-- HIGH → deep_exploration  
-
-Enables ethical information transfer by respecting measured human bandwidth.
-
-## Why
-
-A direct counter-signal to rigid, disembodied paradigms of intelligence.  
-The human physiology — not the isolated mind — holds final veto power.
-
-## Quick Run
-
-```bash
-python main.py
+## Current Setup
+- **Universal Bridge:** Listens on port `5000`.
+- **Requirements:** Flask, Bleak, Numpy, Requests.
